@@ -18,7 +18,11 @@ public class Fingerprint {
     private String template;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date createdAt;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     public int getId() {
         return id;
@@ -45,10 +49,18 @@ public class Fingerprint {
     }
 
     public Date getDate() {
-        return date;
+        return createdAt;
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.createdAt = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
