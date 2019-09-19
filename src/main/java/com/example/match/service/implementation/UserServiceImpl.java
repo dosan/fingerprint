@@ -17,6 +17,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(String name, String surname, String iin) {
+
         Date date = new Date(System.currentTimeMillis());
         User user = new User();
         user.setName(name);
@@ -31,5 +32,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer idx) {
         return userRepository.findById(idx).get();
+    }
+
+    @Override
+    public User findByAttirbutes(String name, String surname, String iin) {
+        User existingUser = userRepository.findByNameAndSurnameAndIin(name,surname,iin);
+        return existingUser;
     }
 }

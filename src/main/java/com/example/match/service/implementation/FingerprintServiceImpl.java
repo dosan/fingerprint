@@ -34,6 +34,11 @@ public class FingerprintServiceImpl implements FingerprintService {
     }
 
     @Override
+    public Integer countByUser(User user) {
+        return (int)fingerprintRepository.countByUser(user);
+    }
+
+    @Override
     public void saveSerializeFingerTemplate(MultipartFile file,User user) throws IOException {
         byte[] probeImage = file.getBytes();
         FingerprintTemplate probe = new FingerprintTemplate()

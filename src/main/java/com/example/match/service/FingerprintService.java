@@ -13,4 +13,5 @@ public interface FingerprintService {
     void saveSerializeFingerTemplate(MultipartFile file, User user) throws IOException;
     User compare(MultipartFile file) throws IOException;
     User find(FingerprintTemplate probe, Iterable<Fingerprint> candidates);
+    Integer countByUser(User user);
 }

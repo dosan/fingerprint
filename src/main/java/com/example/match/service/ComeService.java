@@ -5,4 +5,5 @@ import java.util.Date;
 
 public interface ComeService {
     void register(User user);
+
 }
