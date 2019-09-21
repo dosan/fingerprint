@@ -1,9 +1,9 @@
 package com.example.match.service;
 
-import com.example.match.model.User;
+import com.example.match.model.Owner;
 
 public interface UserService {
-    User saveUser(String name,String surname, String iin);
-    User findById(Integer idx);
-    User findByAttirbutes(String name,String surname,String iin);
+    Owner saveUser(String name, String surname, String iin);
+    Owner findById(Integer idx);
+    Owner findByAttirbutes(String name, String surname, String iin);
 }

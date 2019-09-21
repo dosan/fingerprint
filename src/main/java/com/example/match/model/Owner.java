@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class User {
+public class Owner {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String surname;

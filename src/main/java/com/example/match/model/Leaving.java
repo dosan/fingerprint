@@ -1,13 +1,13 @@
 package com.example.match.model;
 
+
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
 public class Leaving {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -15,9 +15,13 @@ public class Leaving {
 
     private String status;
 
+
+    @Column(nullable = true)
+    private Integer organizationId;
+
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    private Owner owner;
 
     public Integer getId() {
         return id;
@@ -43,11 +47,11 @@ public class Leaving {
         this.status = status;
     }
 
-    public User getUser() {
-        return user;
+    public Owner getOwner() {
+        return owner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 }

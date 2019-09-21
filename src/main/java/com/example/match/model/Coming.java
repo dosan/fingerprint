@@ -1,10 +1,10 @@
 package com.example.match.model;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.sql.Timestamp;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Coming {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -20,9 +20,13 @@ public class Coming {
 
     private String status;
 
+    @Column(nullable = true)
+    private Integer organizationId;
+
+
     @ManyToOne
     @JoinColumn(name="user_id")
-    private User user;
+    private Owner owner;
 
     public Integer getId() {
         return id;
@@ -49,11 +53,11 @@ public class Coming {
         this.hasCome = hasCome;
     }
 
-    public User getUser() {
-        return user;
+    public Owner getOwner() {
+        return owner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 }

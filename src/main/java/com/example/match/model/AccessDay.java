@@ -10,9 +10,9 @@ import javax.persistence.Id;
 public class AccessDay {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String day;
+    //private String day;
     private Integer dayInteger;
     private boolean access;
 
@@ -24,13 +24,13 @@ public class AccessDay {
         this.id = id;
     }
 
-    public String getDay() {
+   /* public String getDay() {
         return day;
     }
 
     public void setDay(String day) {
         this.day = day;
-    }
+    }*/
 
     public boolean isAccess() {
         return access;

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class AccessHour {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY  )
     private Integer id;
     private Integer comeHour;
     private Integer comeHourEnd;

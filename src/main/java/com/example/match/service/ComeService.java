@@ -1,9 +1,8 @@
 package com.example.match.service;
 
-import com.example.match.model.User;
-import java.util.Date;
+import com.example.match.model.Owner;
 
 public interface ComeService {
-    void register(User user);
+    void register(Owner owner);
 
 }

@@ -1,7 +1,7 @@
 package com.example.match.service;
 
-import com.example.match.model.User;
+import com.example.match.model.Owner;
 
 public interface LeaveService {
-    void register(User user);
+    void register(Owner owner);
 }

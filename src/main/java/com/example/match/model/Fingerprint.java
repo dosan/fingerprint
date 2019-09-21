@@ -1,7 +1,5 @@
 package com.example.match.model;
 
-import com.machinezoo.sourceafis.FingerprintTemplate;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -9,7 +7,7 @@ import java.util.Date;
 public class Fingerprint {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
@@ -21,8 +19,8 @@ public class Fingerprint {
     private Date createdAt;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="owner_id")
+    private Owner owner;
 
     public int getId() {
         return id;
@@ -56,11 +54,11 @@ public class Fingerprint {
         this.createdAt = date;
     }
 
-    public User getUser() {
-        return user;
+    public Owner getOwner() {
+        return owner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 }

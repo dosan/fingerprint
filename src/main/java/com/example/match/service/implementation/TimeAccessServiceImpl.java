@@ -22,8 +22,12 @@ public class TimeAccessServiceImpl implements TimeAccessService {
 
     @Override
     public boolean accessDay(Integer currentDay) {
-        AccessDay access = accessDayRepository.getAccessDayByDayInteger(currentDay);
+        AccessDay access = accessDayRepository.getFirstByDayInteger(currentDay);
         System.out.println(access);
+	if(access == null)
+	{
+	   return false;
+	}
         return access.isAccess();
     }
 
@@ -42,7 +46,7 @@ public class TimeAccessServiceImpl implements TimeAccessService {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE");
         AccessDay accessDay = new AccessDay();
-        accessDay.setDay(dateFormat.format(date));
+        //accessDay.setDay(dateFormat.format(date));
         accessDay.setAccess(true);
         accessDay.setDayInteger(date.getDay());
         accessDayRepository.save(accessDay);
@@ -55,7 +59,7 @@ public class TimeAccessServiceImpl implements TimeAccessService {
         accessHour.setComeHour(7);
         accessHour.setComeHourEnd(12);
         accessHour.setLeaveHour(13);
-        accessHour.setLeaveHourEnd(20);
+        accessHour.setLeaveHourEnd(24);
         accessHour.setAccess(true);
         accessHourRepository.save(accessHour);
     }

@@ -1,22 +1,20 @@
 package com.example.match.controller;
 ;
-import com.example.match.model.User;
+import com.example.match.model.Owner;
 import com.example.match.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import  com.example.match.iin.*;
 
 @RestController
 @RequestMapping("/upload")
@@ -37,11 +35,11 @@ public class MainController {
 
 
     @PostMapping("/register")
-    public User ComingFingerprintCompare(@RequestParam("file") MultipartFile file) throws IOException { 
+    public Owner ComingFingerprintCompare(@RequestParam("file") MultipartFile file) throws IOException {
 	    System.out.println(file);
-	    User match = fingerprintService.compare(file);
+	    Owner match = fingerprintService.compare(file);
         if(match == null){
-            return new User();
+            return new Owner();
         }
 
         Date date = new Date();
@@ -56,7 +54,7 @@ public class MainController {
         }else{
             return null;
         }
-        logger.info(match.getName(),match.getSurname(),match.getIin());
+	System.out.println(match.getName());
         return match;
     }
     @GetMapping("/time")
@@ -90,19 +88,26 @@ public class MainController {
         logger.info(name);
         logger.info(surname);
         logger.info(iin);
-        User existingUser = userService.findByAttirbutes(name,surname,iin);
-        if(existingUser==null) {
-            User user = userService.saveUser(name, surname, iin);
-            fingerprintService.saveSerializeFingerTemplate(file,user);
-            int count = fingerprintService.countByUser(user);
+        PrivatePersonId iinCheker = new PrivatePersonId(iin);
+        System.out.println(iinCheker.isValid());
+        System.out.println(iinCheker.getBirthDate().toString());
+        System.out.println(iinCheker.getSex());
+        if(!iinCheker.isValid()){
+            return "ИИН не валидный";
+        }
+        Owner existingOwner = userService.findByAttirbutes(name,surname,iin);
+        if(existingOwner ==null) {
+            Owner owner = userService.saveUser(name, surname, iin);
+            fingerprintService.saveSerializeFingerTemplate(file, owner);
+            int count = fingerprintService.countByUser(owner);
             System.out.println(count);
             if(count == 3){
                 return "Регистрация успешно завершена";
             }
             return Integer.toString(count);
         }
-        fingerprintService.saveSerializeFingerTemplate(file,existingUser);
-        int count = fingerprintService.countByUser(existingUser);
+        fingerprintService.saveSerializeFingerTemplate(file, existingOwner);
+        int count = fingerprintService.countByUser(existingOwner);
         System.out.println(count);
         if(count == 3){
             return "Регистрация успешно завершена";

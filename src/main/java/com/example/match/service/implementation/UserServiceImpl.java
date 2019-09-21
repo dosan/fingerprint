@@ -1,6 +1,6 @@
 package com.example.match.service.implementation;
 
-import com.example.match.model.User;
+import com.example.match.model.Owner;
 import com.example.match.repository.UserRepository;
 import com.example.match.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,27 +16,27 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public User saveUser(String name, String surname, String iin) {
+    public Owner saveUser(String name, String surname, String iin) {
 
         Date date = new Date(System.currentTimeMillis());
-        User user = new User();
-        user.setName(name);
-        user.setSurname(surname);
-        user.setIin(iin);
-        user.setCreatedAt(date);
-        user.setUpdatedAt(date);
-        userRepository.save(user);
-        return user;
+        Owner owner = new Owner();
+        owner.setName(name);
+        owner.setSurname(surname);
+        owner.setIin(iin);
+        owner.setCreatedAt(date);
+        owner.setUpdatedAt(date);
+        userRepository.save(owner);
+        return owner;
     }
 
     @Override
-    public User findById(Integer idx) {
+    public Owner findById(Integer idx) {
         return userRepository.findById(idx).get();
     }
 
     @Override
-    public User findByAttirbutes(String name, String surname, String iin) {
-        User existingUser = userRepository.findByNameAndSurnameAndIin(name,surname,iin);
-        return existingUser;
+    public Owner findByAttirbutes(String name, String surname, String iin) {
+        Owner existingOwner = userRepository.findByNameAndSurnameAndIin(name,surname,iin);
+        return existingOwner;
     }
 }

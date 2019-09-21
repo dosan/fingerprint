@@ -1,7 +1,7 @@
 package com.example.match.service.implementation;
 
 import com.example.match.model.Fingerprint;
-import com.example.match.model.User;
+import com.example.match.model.Owner;
 import com.example.match.repository.FingerprintRepository;
 import com.example.match.service.FingerprintService;
 import com.machinezoo.sourceafis.FingerprintMatcher;
@@ -12,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -23,32 +21,32 @@ public class FingerprintServiceImpl implements FingerprintService {
     FingerprintRepository fingerprintRepository;
 
     @Override
-    public void saveFingerprint(FingerprintTemplate template, User user) {
+    public void saveFingerprint(FingerprintTemplate template, Owner owner) {
         Date date = new Date(System.currentTimeMillis());
         Fingerprint fingerprint = new Fingerprint();
-        fingerprint.setName(user.getName());
+        fingerprint.setName(owner.getName());
         fingerprint.setTemplate(template.serialize());
         fingerprint.setDate(date);
-        fingerprint.setUser(user);
+        fingerprint.setOwner(owner);
         fingerprintRepository.save(fingerprint);
     }
 
     @Override
-    public Integer countByUser(User user) {
-        return (int)fingerprintRepository.countByUser(user);
+    public Integer countByUser(Owner owner) {
+        return (int)fingerprintRepository.countByOwner(owner);
     }
 
     @Override
-    public void saveSerializeFingerTemplate(MultipartFile file,User user) throws IOException {
+    public void saveSerializeFingerTemplate(MultipartFile file, Owner owner) throws IOException {
         byte[] probeImage = file.getBytes();
         FingerprintTemplate probe = new FingerprintTemplate()
                 .dpi(500)
                 .create(probeImage);
-        saveFingerprint(probe,user);
+        saveFingerprint(probe, owner);
     }
 
     @Override
-    public User find(FingerprintTemplate probe, Iterable<Fingerprint> candidates) {
+    public Owner find(FingerprintTemplate probe, Iterable<Fingerprint> candidates) {
         FingerprintMatcher matcher = new FingerprintMatcher()
                 .index(probe);
         Fingerprint match = null;
@@ -65,13 +63,13 @@ public class FingerprintServiceImpl implements FingerprintService {
         }
         double threshold = 40;
         if(high >= threshold) {
-            return match.getUser();
+            return match.getOwner();
         }
         return null;
     }
 
     @Override
-    public User compare(MultipartFile file) throws IOException {
+    public Owner compare(MultipartFile file) throws IOException {
         byte[] probeImage = file.getBytes();
         FingerprintTemplate probe = new FingerprintTemplate()
                 .dpi(500)
