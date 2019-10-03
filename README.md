@@ -38,3 +38,18 @@ URI|request|response|description
 
 ## Исходный код
  [https://github.com/kanatmg/fingerprint/tree/second_prototype](https://github.com/kanatmg/fingerprint/tree/second_prototype)
+
+## Сборка проекта
+Чтобы собрать проект запустите команду mvn package в корне проекта далее после тестов Maven сформирует готовый jar файл в папке target
+
+## Запуск 
+Минимальная версия для запуска java-ы должна быть -8 
+
+Чтобы запустить jar файл используйте команду java -jar target/ИМЯ_JAR_ФАЙЛА
+
+
+
+
+
+ 
+ 
