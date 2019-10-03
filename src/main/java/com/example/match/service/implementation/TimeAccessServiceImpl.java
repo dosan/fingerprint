@@ -21,14 +21,10 @@ public class TimeAccessServiceImpl implements TimeAccessService {
     AccessHourRepository accessHourRepository;
 
     @Override
-    public boolean accessDay(Integer currentDay) {
-        AccessDay access = accessDayRepository.getFirstByDayInteger(currentDay);
-        System.out.println(access);
-	if(access == null)
-	{
-	   return false;
-	}
-        return access.isAccess();
+    public AccessDay accessDay(Integer currentDay) {
+        AccessDay access = accessDayRepository.getAccessDayByDayInteger(currentDay);
+        System.out.println(access.getDayInteger());
+        return access;
     }
 
     @Override

@@ -1,31 +1,25 @@
 package com.example.match.model;
 
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-public class Coming {
-
+public class OwnerEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date hasCome;
-
+    private Date time;
+    private  Integer type;
     private String status;
 
-    @Column(nullable = true)
-    private Integer organizationId;
-
+    @ManyToOne
+    @JoinColumn(name="organization_id")
+    private Organization organization;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="owner_id")
     private Owner owner;
 
     public Integer getId() {
@@ -45,12 +39,12 @@ public class Coming {
         this.status = status;
     }
 
-    public Date getHasCome() {
-        return hasCome;
+    public Organization getOrganization() {
+        return organization;
     }
 
-    public void setHasCome(Date hasCome) {
-        this.hasCome = hasCome;
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public Owner getOwner() {
@@ -59,5 +53,21 @@ public class Coming {
 
     public void setOwner(Owner owner) {
         this.owner = owner;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

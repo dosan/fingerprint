@@ -1,9 +1,14 @@
 package com.example.match.controller;
-;
+
 import com.example.match.model.Owner;
+import com.example.match.model.OwnerEntry;
+import com.example.match.repository.UserRepository;
 import com.example.match.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.*;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -27,15 +32,20 @@ public class MainController {
     @Autowired
     private UserService userService;
     @Autowired
-    private ComeService comeService;
+    private UserRepository userRepository;
+    @Qualifier("comeServiceImpl")
     @Autowired
-    private LeaveService leaveService;
+    private OwnerEntryService comeEntryService;
+    @Qualifier("leaveServiceImpl")
+    @Autowired
+    private OwnerEntryService leaveEntryService;
     @Autowired
     private TimeAccessService timeAccessService;
 
 
     @PostMapping("/register")
-    public Owner ComingFingerprintCompare(@RequestParam("file") MultipartFile file) throws IOException {
+    public Owner ComingFingerprintCompare(@RequestParam("file") MultipartFile file,
+                                          @RequestParam("orgId") Integer organizationId) throws IOException {
 	    System.out.println(file);
 	    Owner match = fingerprintService.compare(file);
         if(match == null){
@@ -43,41 +53,48 @@ public class MainController {
         }
 
         Date date = new Date();
-        if(timeAccessService.accessDay(date.getDay())){
-        if(date.getHours() >= timeAccessService.accessHours().getComeHour() && date.getHours() <= timeAccessService.accessHours().getComeHourEnd()){
-            comeService.register(match);
-        }else if(date.getHours() > timeAccessService.accessHours().getLeaveHour() && date.getHours() <= timeAccessService.accessHours().getLeaveHourEnd()){
-            leaveService.register(match);
+        System.out.println(date.getDay());
+        System.out.println(timeAccessService.accessDay(date.getDay()));
+        if(timeAccessService.accessDay(date.getDay()).getDayInteger()==date.getDay()){
+            System.out.println("Вошел");
+            if(organizationId != null){
+                comeEntryService.register(match,organizationId);
+            }else {
+                System.out.println("Organization is empty");
+                return null;
+            }
         }else{
+            System.out.println("day false");
             return null;
         }
-        }else{
-            return null;
-        }
-	System.out.println(match.getName());
+	    System.out.println(match.getName());
         return match;
     }
     @GetMapping("/time")
-    public Integer currentTime(){
+    public ResponseEntity currentTime(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        return date.getHours();
+        return ResponseEntity.ok(userRepository.findAll());
     }
     @GetMapping("/day")
     public String saveDay(){
-        timeAccessService.saveDays();
-        return "Saved";
-    }
-    @GetMapping("/today")
-    public boolean todayIsAccessDay(){
         Date date = new Date();
-        return timeAccessService.accessDay(date.getDay());
+        return Integer.toString(date.getDay());
     }
+
     @GetMapping("/hour")
     public String saveHours(){
-        Date date = new Date();
-        timeAccessService.saveHours();
-        return "saved";
+        //Date date = new Date();
+        //timeAccessService.saveHours();
+        String pw_hash = BCrypt.hashpw("123456", BCrypt.gensalt());
+        System.out.println(pw_hash);
+        if (BCrypt.checkpw("123456", "$2a$13$dahuOYlFmSQkxvOUY4oySOtWNYWNQzftA4SNgk7HkquT31pQ1VwHy"))
+            System.out.println("It matches");
+        else
+            System.out.println("It does not match");
+
+
+        return "Central Stadium";
     }
 
     @PostMapping("/save")
