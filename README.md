@@ -37,4 +37,4 @@ URI|request|response|description
 
 
 ## Исходный код
- [github](https://github.com/hantsy/springboot-jwt-sample)
+ [https://github.com/kanatmg/fingerprint/tree/second_prototype](https://github.com/kanatmg/fingerprint/tree/second_prototype)
