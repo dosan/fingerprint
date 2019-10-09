@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface FingerprintRepository extends CrudRepository<Fingerprint, Long> {
     long countByOwner(Owner owner);
+    Iterable<Fingerprint> findAllByOwner(Owner owner);
 }

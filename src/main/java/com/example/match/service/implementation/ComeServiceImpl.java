@@ -23,7 +23,10 @@ public class ComeServiceImpl implements OwnerEntryService {
 
     @Override
     public void register(Owner owner,Integer organizationId) {
-        Date date = new Date(System.currentTimeMillis());
+        long HOUR = 3600*1000;
+        Date newDate = new Date(System.currentTimeMillis());
+        Date date = new Date(newDate.getTime() + 6 * HOUR);
+        //Date dateAlmaty = new Date(date.getTime() + 2*);
         OwnerEntry come = new OwnerEntry();
         come.setTime(date);
         come.setStatus("Вошел");

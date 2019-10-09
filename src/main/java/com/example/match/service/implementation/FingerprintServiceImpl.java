@@ -1,9 +1,13 @@
 package com.example.match.service.implementation;
 
 import com.example.match.model.Fingerprint;
+import com.example.match.model.TempClass;
 import com.example.match.model.Owner;
 import com.example.match.repository.FingerprintRepository;
+import com.example.match.repository.GroupRepository;
+import com.example.match.repository.UserRepository;
 import com.example.match.service.FingerprintService;
+import com.example.match.service.GroupService;
 import com.machinezoo.sourceafis.FingerprintMatcher;
 import com.machinezoo.sourceafis.FingerprintTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +23,16 @@ public class FingerprintServiceImpl implements FingerprintService {
 
     @Autowired
     FingerprintRepository fingerprintRepository;
+    @Autowired
+    GroupRepository groupRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public void saveFingerprint(FingerprintTemplate template, Owner owner) {
-        Date date = new Date(System.currentTimeMillis());
+        long HOUR = 3600*1000;
+        Date newDate = new Date(System.currentTimeMillis());
+        Date date = new Date(newDate.getTime() + 6 * HOUR);
         Fingerprint fingerprint = new Fingerprint();
         fingerprint.setName(owner.getName());
         fingerprint.setTemplate(template.serialize());
@@ -69,12 +79,33 @@ public class FingerprintServiceImpl implements FingerprintService {
     }
 
     @Override
-    public Owner compare(MultipartFile file) throws IOException {
+    public Owner compare(MultipartFile file, int organizationId) throws IOException {
         byte[] probeImage = file.getBytes();
         FingerprintTemplate probe = new FingerprintTemplate()
                 .dpi(500)
                 .create(probeImage);
-        Iterable<Fingerprint> fingerprints = fingerprintRepository.findAll();
+        Iterable<TempClass> groups =groupRepository.findAllByOrg(organizationId);
+        Iterable<Owner> owners;
+        Iterable<Fingerprint> fingerprints;
+        List<Owner> ownersList = new ArrayList<>();
+        List<Fingerprint> fingerprintsList = new ArrayList<>();
+        //Iterable<Fingerprint> fingerprints = fingerprintRepository.findAll();
+
+        for (TempClass group : groups) {
+            Owner owner = userRepository.findById(group.getOwe()).get();
+            //System.out.println(owner.getName());
+            ownersList.add(owner);
+        }
+        owners = ownersList;
+        for(Owner owner : owners) {
+            Iterable<Fingerprint> tempFingerprint = fingerprintRepository.findAllByOwner(owner);
+            for(Fingerprint finger : tempFingerprint) {
+                fingerprintsList.add(finger);
+                //System.out.println(finger.getName());
+            }
+        }
+        fingerprints = fingerprintsList;
+        System.out.println(fingerprints);
         return find(probe,fingerprints);
     }
 }

@@ -17,8 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Owner saveUser(String name, String surname, String iin) {
-
-        Date date = new Date(System.currentTimeMillis());
+        long HOUR = 3600*1000;
+        Date newDate = new Date(System.currentTimeMillis());
+        Date date = new Date(newDate.getTime() + 6 * HOUR);
         Owner owner = new Owner();
         owner.setName(name);
         owner.setSurname(surname);

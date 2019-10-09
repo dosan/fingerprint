@@ -10,7 +10,7 @@ import java.io.IOException;
 public interface FingerprintService {
     void saveFingerprint(FingerprintTemplate template, Owner owner);
     void saveSerializeFingerTemplate(MultipartFile file, Owner owner) throws IOException;
-    Owner compare(MultipartFile file) throws IOException;
+    Owner compare(MultipartFile file,int organizationId) throws IOException;
     Owner find(FingerprintTemplate probe, Iterable<Fingerprint> candidates);
     Integer countByUser(Owner owner);
 }

@@ -41,18 +41,22 @@ public class MainController {
     private OwnerEntryService leaveEntryService;
     @Autowired
     private TimeAccessService timeAccessService;
+    @Autowired
+    private GroupService groupService;
 
 
     @PostMapping("/register")
     public Owner ComingFingerprintCompare(@RequestParam("file") MultipartFile file,
                                           @RequestParam("orgId") Integer organizationId) throws IOException {
 	    System.out.println(file);
-	    Owner match = fingerprintService.compare(file);
+	    Owner match = fingerprintService.compare(file,organizationId);
         if(match == null){
             return new Owner();
         }
 
-        Date date = new Date();
+        long HOUR = 3600*1000;
+        Date newDate = new Date();
+        Date date = new Date(newDate.getTime() + 6 * HOUR);
         System.out.println(date.getDay());
         System.out.println(timeAccessService.accessDay(date.getDay()));
         if(timeAccessService.accessDay(date.getDay()).getDayInteger()==date.getDay()){
@@ -93,15 +97,19 @@ public class MainController {
         else
             System.out.println("It does not match");
 
-
-        return "Central Stadium";
+        long HOUR = 3600*1000;
+        Date date = new Date(System.currentTimeMillis());
+        Date newDate = new Date(date.getTime() + 6 * HOUR);
+        System.out.println(newDate);
+        return Integer.toString(newDate.getHours());
     }
 
     @PostMapping("/save")
     public String fingerprintSave(@RequestParam("file") MultipartFile file,
-                               @RequestParam("name") String name,
-                               @RequestParam("surname") String surname,
-                               @RequestParam("iin") String iin) throws IOException {
+                                  @RequestParam("name") String name,
+                                  @RequestParam("surname") String surname,
+                                  @RequestParam("iin") String iin,
+                                  @RequestParam("organizationId") Integer organizationId) throws IOException {
         logger.info(name);
         logger.info(surname);
         logger.info(iin);
@@ -119,6 +127,7 @@ public class MainController {
             int count = fingerprintService.countByUser(owner);
             System.out.println(count);
             if(count == 3){
+                groupService.save(organizationId,owner.getId());
                 return "Регистрация успешно завершена";
             }
             return Integer.toString(count);
@@ -127,6 +136,7 @@ public class MainController {
         int count = fingerprintService.countByUser(existingOwner);
         System.out.println(count);
         if(count == 3){
+            groupService.save(organizationId,existingOwner.getId());
             return "Регистрация успешно завершена";
         }
 	if(count>3){
